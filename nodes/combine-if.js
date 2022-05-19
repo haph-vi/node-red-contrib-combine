@@ -4,16 +4,17 @@ module.exports = function (RED) {
             RED.nodes.createNode(this, config);
             this.status({fill: 'grey', shape: 'ring', text: 'false'});
             this.on('input', msg => {
+                this.state = Boolean(msg.payload);
                 if (msg.topic === config.topic) {
-                    this.state = Boolean(msg.payload);
                     if (this.state) {
                         this.status({fill: 'blue', shape: 'dot', text: 'true'});
-                    } else {
-                        this.status({fill: 'grey', shape: 'ring', text: 'false'});
-                    }
-                } else if (this.state) {
-                    this.send([msg, null]);
-                } else {
+                        this.send([msg, null]);
+                    } 
+                    else {
+                        this.status({fill: 'blue', shape: 'dot', text: 'true - no payload'});
+                        this.send([msg, null]);
+                else {
+                    this.status({fill: 'grey', shape: 'ring', text: 'false'});
                     this.send([null, msg]);
                 }
             });
